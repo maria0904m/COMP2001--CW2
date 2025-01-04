@@ -1,0 +1,8 @@
+-- Drop all tables in CW2 schema
+DROP TABLE IF EXISTS CW2.TrailDetails;
+DROP TABLE IF EXISTS CW2.TrailDetails1;
+DROP TABLE IF EXISTS CW2.TrailDetailsNODuplicates;
+DROP TABLE IF EXISTS CW2.Country;
+DROP TABLE IF EXISTS CW2.Trail;
+DROP TABLE IF EXISTS CW2.TrailTemp;
+DROP TABLE IF EXISTS CW2.TrailFeatureTemp;
