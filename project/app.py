@@ -12,7 +12,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://MStefan:TszJ810+@DIST-6-
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Hardcoded JWT Secret Key for testing purposes
-app.config['JWT_SECRET_KEY'] = 'C0mP2001'  # Replace with your actual secret key for production
+app.config['JWT_SECRET_KEY'] = 'C0mP2001' 
 
 db = SQLAlchemy(app)
 jwt = JWTManager(app)
@@ -153,6 +153,11 @@ def get_trail(trail_id):
 @jwt_required() 
 def update_trail(trail_id):
     data = request.get_json()
+    
+    #check users role
+    role = get_jwt_identity().get('role', 'user')  
+    if role != 'admin':
+        return jsonify({'message': 'Permission denied'}), 403  # Admin only can update trails
 
     # Validate required fields
     if 'Name' not in data or 'Length' not in data or 'CountryID' not in data:
@@ -190,6 +195,12 @@ def update_trail(trail_id):
 @app.route('/trails/<int:trail_id>', methods=['DELETE'])
 @jwt_required()  
 def delete_trail(trail_id):
+
+    #check users role
+    role = get_jwt_identity().get('role', 'user')  
+    if role != 'admin':
+        return jsonify({'message': 'Permission denied'}), 403  # Admin only can update trails
+    
     try:
         query = text("DELETE FROM CW2G.Trail WHERE TrailID = :trail_id")
         db.session.execute(query, {'trail_id': trail_id})
